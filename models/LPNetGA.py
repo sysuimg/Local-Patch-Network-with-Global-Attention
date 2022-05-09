@@ -173,7 +173,7 @@ class LPNetGA(nn.Module):
 		self.attn = Attn(self.feature_num, attn_chn)
 		self.lfe = LPNet(self.feature_num, lfe_chn)
 
-	def forward(self,x):
+	def forward(self, x):
 		gfm = self.gfe(x)
 		attn = self.attn(gfm)
 
@@ -234,6 +234,6 @@ class LPNetGA(nn.Module):
 		fusedFM = torch.reshape(fused_fm, (-1, 1, self.im_size[0]*self.im_size[1]))
 		attnFM = torch.reshape(attn, (-1, 1, self.im_size[0]*self.im_size[1]))
 
-		fusedFM = ((fusedFM - torch.min(fusedFM)) / (torch.max(fusedFM) - torch.min(fusedFM) + 1e-4))
+		fusedFM = ((fusedFM - torch.min(fusedFM)) / (torch.max(fusedFM) - torch.min(fusedFM) + 1e-4)) ** 10
 
 		return (fusedFM, subimgs, attnFM)

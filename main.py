@@ -7,14 +7,14 @@ if __name__ == '__main__':
 	stride = (10,10)
 
 
-	train_path = 'E:/data/chenfang/HMAexperiments/SIRST/train/'
-	test_path = 'E:/data/chenfang/HMAexperiments/SIRST/test/'
-	out_path = 'E:/data/chenfang/HMAexperiments/SIRST/test/predict'
+	train_path = '../data/SIRST/train/'
+	test_path = '../data/SIRST/test/'
+	out_path = '../data/SIRST/test/predict'
 	im_type = '.bmp'
 
 
 	batch_size = 2
-	epoches = 20
+	epoches = 2
 
 
 	model = LPNetGA(im_size, patch_size, stride)
