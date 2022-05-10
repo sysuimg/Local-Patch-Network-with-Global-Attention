@@ -1,5 +1,6 @@
 import numpy as np
 import os
+import cv2
 
 def list_file(path, imtype='.bmp', print_=False):
 	count = 0
@@ -58,6 +59,24 @@ def bilinear_interpolate(source, scale=[2,2], pad=0.5):
 	# print(np.min(fy),np.max(fy))
 	fy = fy.reshape(fy.shape[0],fy.shape[1],tw,th).transpose((0,1,3,2))
 	return fy
+
+def center(cnd):
+	p_lst = np.array(cnd)
+	xmin = np.min(p_lst[:,0])
+	xmax = np.max(p_lst[:,0])
+	ymin = np.min(p_lst[:,1])
+	ymax = np.max(p_lst[:,1])
+	return ((xmin+xmax)/2, (ymin+ymax)/2)
+
+def getConnectedDomain(mask):
+	mask = np.copy(mask).astype(np.uint8)
+	cnd = []
+	num, labels = cv2.connectedComponents(mask)
+	for n in range(1, num):
+		p_lst = np.array(np.where(labels==n)).transpose(1,0)
+		p_lst = [tuple(p) for p in p_lst]
+		cnd.append(p_lst)
+	return cnd
 
 ############################################# convert ground truth #################################################################
 def convert_gt(img:np.ndarray) -> np.ndarray:

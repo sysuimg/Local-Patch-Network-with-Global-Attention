@@ -2,14 +2,18 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 
-from utils.utils import *
 from tqdm import tqdm
 import numpy as np
+import pandas as pd
 from matplotlib import pyplot as plt
 import os
+import time
 import cv2 as cv2
 import random
 import shutil
+
+from utils.utils import *
+from utils.eval import *
 
 def data_generator(path, im_type, im_size, subim_ksize, subim_stride, batch_size:int = 128, mode: str= "train", shuffle: bool= True):
 	file_list = list_file(path+"/", im_type)
@@ -121,7 +125,7 @@ def train(data_path, im_type, model, epoches, batch_size, load_path=None):
 				index += 1
 		if not os.path.isdir('./pretrained/'):
 			os.makedirs('./pretrained/')
-		torch.save(model.state_dict(), './pretrained/LPNetGA.pth')
+		torch.save(model.state_dict(), './pretrained/LPNetGA_epoch'+str(epoch+1)+'.pth')
 	return model
 
 
@@ -157,3 +161,182 @@ def test(data_path, out_path, im_type, model, load_path=None):
 		feature_map = np.round(feature_map*255).astype(np.uint8)
 
 		cv2.imwrite(os.path.join(out_path, img_name), feature_map)
+
+
+def eval(name, test_path, out_path, stride, im_type, is_delete=True):
+	timestramp = time.strftime('%Y-%m-%d_%H-%M-%S', time.localtime(time.time()))
+	path = os.path.join(test_path, name+'_test_'+timestramp)
+	if os.path.isdir(path):
+		shutil.rmtree(path)
+	os.makedirs(path)
+	os.makedirs(os.path.join(path, 'feature_map'))
+	os.makedirs(os.path.join(path, 'result'))
+	
+	model_path = os.path.join(test_path, name)
+	feature_list = list_file(model_path, im_type)
+	for fm_name in tqdm(feature_list):
+		fm = cv2.imread(os.path.join(model_path, fm_name), 0)
+
+		im_name = fm_name.split('.')[0]+im_type
+		im = cv2.imread(os.path.join(test_path, im_name), 0)
+		(h,w) = im.shape
+		fm = cv2.resize(fm,(w,h))
+		result = np.zeros((h, 2*w))
+		result[:,:w] = im
+		result[:,w:2*w] = fm
+
+		cv2.imwrite(os.path.join(path, 'feature_map', im_name), fm)
+		cv2.imwrite(os.path.join(path, 'result', im_name), result)
+
+	ths = []
+	Pds = []
+	Fas = []
+	TarPrecs = []
+	TarRecs = []
+	TarF1s = []
+	PxlPrecs = []
+	PxlRecs = []
+	PxlF1s = []
+	source_path = test_path
+	gt_path = os.path.join(test_path, 'gt')
+	feature_path = os.path.join(path, 'feature_map')
+	evaluator = Evaluator(source_path, gt_path, feature_path, im_type, tar_area=[0, np.inf], is_print=True)
+	for th in np.arange(0.0+stride, 1.0+stride, stride):
+		print('th:', th, '=============================================')
+		(Pd, Fa, TarPrec, TarRec, TarF1) = evaluator.target_metrics(th)
+		(PxlPrec, PxlRec, PxlF1) = evaluator.pixel_metrics(th)
+		ths.append(th)
+		Pds.append(Pd)
+		Fas.append(Fa)
+		TarPrecs.append(TarPrec)
+		TarRecs.append(TarRec)
+		TarF1s.append(TarF1)
+		PxlPrecs.append(PxlPrec)
+		PxlRecs.append(PxlRec)
+		PxlF1s.append(PxlF1)
+	threshold_eavl = pd.DataFrame({'threshold':ths, 'Pd':Pds, 'Fa':Fas, 'TarPrec':TarPrecs, 'TarRec':TarRecs, 'TarF1':TarF1s, 'PxlPrec':PxlPrecs, 'PxlRec':PxlRecs, 'PxlF1':PxlF1s})
+	threshold_eavl.to_csv(os.path.join(out_path, name+'_'+timestramp+'.csv'))
+
+	if is_delete:
+		shutil.rmtree(path)
+
+def metrics_visual(name_list, file_path, fix={'Th':0.1,'Fa':0.2,'Order':2}):
+	# palet = sns.color_palette('hls', len(name_list))
+
+	linewidth = 1
+	for name in name_list:
+		csv_list = [file if name in file else '' for file in list_file(file_path,'.csv')]
+		csv_list.sort()
+		load_path = file_path+csv_list[-1]
+		print('load_path:', load_path)
+		df = pd.read_csv(load_path)
+		TarPR = np.array([df['TarRec'].tolist(), df['TarPrec'].tolist()]).transpose([1,0]).tolist()
+		TarPR.sort(key=lambda x:x[0])
+		TarPR = np.array(TarPR).transpose([1,0])
+
+		PxlPR = np.array([df['PxlRec'].tolist(), df['PxlPrec'].tolist()]).transpose([1,0]).tolist()
+		PxlPR.sort(key=lambda x:x[0])
+		PxlPR = np.array(PxlPR).transpose([1,0])
+
+		ROC = np.array([df['Fa'].tolist(), df['Pd'].tolist()]).transpose([1,0]).tolist()
+		# ROC.append([0,0])
+		ROC.sort(key=lambda x:x[0])
+		ROC = np.array(ROC).transpose([1,0])
+
+		plt.figure(1)
+		plt.plot(TarPR[0,:], TarPR[1,:], linewidth=linewidth)
+		plt.xlabel('Target_Recall')
+		plt.ylabel('Target_Precision')
+		plt.legend(name_list)
+
+		plt.figure(2)
+		plt.plot(PxlPR[0,:], PxlPR[1,:], linewidth=linewidth)
+		plt.xlabel('Pixel_Recall')
+		plt.ylabel('Pixels_Precision')
+		plt.legend(name_list)
+
+		plt.figure(3)
+		plt.plot(ROC[0,:], ROC[1,:], linewidth=linewidth)
+		plt.xlabel('False alarm rate (Fa)')
+		plt.ylabel('Probability of detection (Pd)')
+		plt.xlim([0,2])
+		plt.legend(name_list)
+
+		plt.figure(4)
+		plt.plot(df['threshold'], df['TarF1'], linewidth=linewidth)
+		plt.xlabel('threshold')
+		plt.ylabel('Target_F1')
+		plt.legend(name_list)
+
+		plt.figure(5)
+		plt.plot(df['threshold'], df['PxlF1'], linewidth=linewidth)
+		plt.xlabel('threshold')
+		plt.ylabel('Pixel_F1')
+		plt.legend(name_list)
+
+	plt.figure(1)
+	plt.plot([0.0,1.0], [0.0,1.0], '--', linewidth=linewidth)
+	plt.figure(2)
+	plt.plot([0.0,1.0], [0.0,1.0], '--', linewidth=linewidth)
+	plt.show()
+	# # plt.savefig(file_path+csv_list[-1].split('.')[0]+'.jpg')
+
+	for name in name_list:
+		csv_list = [file if name in file else '' for file in list_file(file_path,'.csv')]
+		csv_list.sort()
+		load_path = file_path+csv_list[-1]
+		print('load_path:', load_path)
+		df = pd.read_csv(load_path)
+
+		ROC = np.array([df['Fa'].tolist(), df['Pd'].tolist()]).transpose([1,0]).tolist()
+		ROC.append([0,0])
+		ROC.sort(key=lambda x:x[0])
+		ROC = np.array(ROC).transpose([1,0])
+		select = np.where(ROC[0,:]<=0.5)[0]
+		ROC = ROC[:,select]
+
+		AUC = 0
+		for i in range(ROC.shape[1]-1):
+			fa0 = ROC[0,i]
+			pd0 = ROC[1,i]
+
+			fa1 = ROC[0,i+1]
+			pd1 = ROC[1,i+1]
+
+			AUC += pd1*(fa1-fa0)
+
+		AUC /= max([max(ROC[1,:]),1.0])*max(ROC[0,:])
+
+
+		TarF1 = 0
+		PxlF1 = 0
+		Fas = []
+		fixedTh = fix['Th']
+		fixedFa = fix['Fa']
+		fixedOrder = fix['Order']
+		for i in range(len(df)):
+			data = df.iloc[i,:]
+			if data['TarF1']>=TarF1:
+				TarF1 = data['TarF1']
+				TarPrec = data['TarPrec']
+				TarRec = data['TarRec']
+			if data['PxlF1']>=PxlF1:
+				PxlF1 = data['PxlF1']
+				PxlPrec = data['PxlPrec']
+				PxlRec = data['PxlRec']
+			if np.abs(data['Fa']-fixedFa) <= fixedTh:
+				Fas.append((np.abs(data['Fa']-fixedFa), data['Fa'], data['Pd']))
+		if len(Fas):
+			Fas.sort()
+			Fas = np.array(Fas)
+			Fas = Fas[:fixedOrder,:]
+
+			z = np.polyfit(Fas[:,1],Fas[:,2],fixedOrder)
+			poly = np.poly1d(z)
+			
+			Pd = poly(fixedFa)
+		else:
+			Pd = np.nan
+
+		print('Method:',name,'\tTarPrec.',TarPrec,'\tTarRec.',TarRec,'\tTarF1:',TarF1,'\tPxlPrec.',PxlPrec,'\tPxlRec.',PxlRec,'\tPxlF1:',PxlF1,'\tPd',Pd,'\tFa',fixedFa,'AUC:',AUC,'\n')
+		# print('Method:',name,'AUC:',AUC,'\n')
