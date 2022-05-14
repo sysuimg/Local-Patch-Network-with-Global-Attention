@@ -234,6 +234,9 @@ class LPNetGA(nn.Module):
 		fusedFM = torch.reshape(fused_fm, (-1, 1, self.im_size[0]*self.im_size[1]))
 		attnFM = torch.reshape(attn, (-1, 1, self.im_size[0]*self.im_size[1]))
 
-		fusedFM = ((fusedFM - torch.min(fusedFM)) / (torch.max(fusedFM) - torch.min(fusedFM) + 1e-4)) ** 10
+		for bi in range(b):
+			f = fusedFM[bi,:,:]
+			f = torch.sqrt(((f - torch.min(f)) / (torch.max(f) - torch.min(f))))
+			fusedFM[bi,:,:] = f
 
 		return (fusedFM, subimgs, attnFM)

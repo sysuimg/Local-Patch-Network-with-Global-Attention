@@ -80,12 +80,18 @@ def train(data_path, im_type, model, epoches, batch_size, load_path=None):
 	trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
 	print(f'{trainable_params:,} training parameters.')
 
-	optimizer = optim.Adam(model.parameters())
-	
+	# optimizer = optim.Adam(model.parameters())
+	lr_init = 0.01
+	optimizer = optim.Adam(model.parameters(), lr=lr_init, amsgrad=True)
+
 	MSE = nn.MSELoss()
 	BCE = nn.BCELoss()
 
 	for epoch in range(epoches):
+		if (epoch+1)%5==0:
+			for param_group in optimizer.param_groups:
+				param_group['lr'] = param_group['lr'] / 10
+
 		generator = data_generator(data_path, im_type, im_size=model.im_size, subim_ksize=model.ksize, subim_stride=model.stride, batch_size=batch_size)   
 		total = next(generator)
 		with tqdm(generator, total=total) as t:
@@ -105,7 +111,7 @@ def train(data_path, im_type, model, epoches, batch_size, load_path=None):
 
 				density_tensor = torch.tensor(y_density).cuda().float()
 
-				attn_loss = (120*120)*MSE(attn_tensor, density_tensor)
+				attn_loss = (model.im_size[0]*model.im_size[1])*MSE(attn_tensor, density_tensor)
 
 				lfe_loss = 0
 				for i, patch_tensor in enumerate(patches_tensor):
@@ -214,9 +220,12 @@ def eval(name, test_path, out_path, stride, im_type, is_delete=True):
 		PxlPrecs.append(PxlPrec)
 		PxlRecs.append(PxlRec)
 		PxlF1s.append(PxlF1)
+
+	if not os.path.isdir(out_path):
+		os.makedirs(out_path)
 	threshold_eavl = pd.DataFrame({'threshold':ths, 'Pd':Pds, 'Fa':Fas, 'TarPrec':TarPrecs, 'TarRec':TarRecs, 'TarF1':TarF1s, 'PxlPrec':PxlPrecs, 'PxlRec':PxlRecs, 'PxlF1':PxlF1s})
 	threshold_eavl.to_csv(os.path.join(out_path, name+'_'+timestramp+'.csv'))
-
+	
 	if is_delete:
 		shutil.rmtree(path)
 

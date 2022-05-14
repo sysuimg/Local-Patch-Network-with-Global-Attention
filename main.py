@@ -8,18 +8,18 @@ if __name__ == '__main__':
 	stride = (10,10)
 
 
-	train_path = '../data/SIRST/train/'
-	test_path = '../data/SIRST/test/'
-	out_path = '../data/SIRST/test/predict'
+	train_path = '../data/MFIRST/train/'
+	test_path = '../data/MFIRST/test/'
+	out_path = '../data/MFIRST/test/LPNetGA'
 	im_type = '.bmp'
 
 
-	batch_size = 2
-	epoches = 2
+	batch_size = 20
+	epoches = 20
 
 
 	model = LPNetGA(im_size, patch_size, stride)
 	train(train_path, im_type, model, epoches, batch_size)
-	test(test_path, out_path, im_type, model, load_path='./pretrained/LPNetGA.pth')
+	test(test_path, out_path, im_type, model, load_path='./pretrained/LPNetGA_epoch13.pth')
 	eval('LPNetGA', test_path, './', 0.01, '.bmp')
 	metrics_visual(['LPNetGA'], './')
