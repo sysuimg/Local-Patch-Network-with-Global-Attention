@@ -19,7 +19,7 @@ if __name__ == '__main__':
 
 
 	model = LPNetGA(im_size, patch_size, stride)
-	train(train_path, im_type, model, epoches, batch_size)
-	test(test_path, out_path, im_type, model, load_path='./pretrained/LPNetGA_epoch13.pth')
+	# train(train_path, im_type, model, epoches, batch_size)
+	test(test_path, out_path, im_type, model, load_path='./pretrained/pth/LPNetGA_epoch13.pth')
 	eval('LPNetGA', test_path, './', 0.01, '.bmp')
 	metrics_visual(['LPNetGA'], './')

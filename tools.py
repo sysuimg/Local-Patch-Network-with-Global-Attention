@@ -81,16 +81,21 @@ def train(data_path, im_type, model, epoches, batch_size, load_path=None):
 	print(f'{trainable_params:,} training parameters.')
 
 	# optimizer = optim.Adam(model.parameters())
-	lr_init = 0.01
-	optimizer = optim.Adam(model.parameters(), lr=lr_init, amsgrad=True)
+	optimizer = optim.Adam(model.parameters(), lr=1e-3)
 
 	MSE = nn.MSELoss()
 	BCE = nn.BCELoss()
 
 	for epoch in range(epoches):
-		if (epoch+1)%5==0:
+		if epoch>=0 and epoch<10:
 			for param_group in optimizer.param_groups:
-				param_group['lr'] = param_group['lr'] / 10
+				param_group['lr'] = 1e-3
+		if epoch>=10 and epoch<15:
+			for param_group in optimizer.param_groups:
+				param_group['lr'] = 1e-4
+		if epoch>=15:
+			for param_group in optimizer.param_groups:
+				param_group['lr'] = 1e-5
 
 		generator = data_generator(data_path, im_type, im_size=model.im_size, subim_ksize=model.ksize, subim_stride=model.stride, batch_size=batch_size)   
 		total = next(generator)
