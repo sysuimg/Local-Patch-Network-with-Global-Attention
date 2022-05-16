@@ -1,5 +1,5 @@
 # Local-Patch-Network-with-Global-Attention
-Official Pytorch implementation of the paper entitled 'Local Patch Network with Global Attention for Infrared Small Target Detection'.
+Official PyTorch implementation of the paper entitled 'Local Patch Network with Global Attention for Infrared Small Target Detection'.
 
 ## Citation
 
