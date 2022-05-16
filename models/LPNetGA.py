@@ -236,7 +236,7 @@ class LPNetGA(nn.Module):
 
 		for bi in range(b):
 			f = fusedFM[bi,:,:]
-			f = torch.sqrt(((f - torch.min(f)) / (torch.max(f) - torch.min(f))))
+			f = ((f - torch.min(f)) / (torch.max(f) - torch.min(f)))
 			fusedFM[bi,:,:] = f
 
 		return (fusedFM, subimgs, attnFM)
