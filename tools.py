@@ -166,7 +166,6 @@ def test(data_path, out_path, im_type, model, load_path=None):
 		fusedFM = np.expand_dims(fusedFM, axis=0)
 		fusedFM = bilinear_interpolate(fusedFM, (h/fh, w/fw), 0)
 		fusedFM = np.reshape(fusedFM, (h,w))
-		# fusedFM = scaleNonlinear(fusedFM, 0.1)
 
 		feature_map = fusedFM
 		feature_map = np.round(feature_map*255).astype(np.uint8)
@@ -292,8 +291,7 @@ def metrics_visual(name_list, file_path, fix={'Th':0.1,'Fa':0.2,'Order':2}):
 	plt.plot([0.0,1.0], [0.0,1.0], '--', linewidth=linewidth)
 	plt.figure(2)
 	plt.plot([0.0,1.0], [0.0,1.0], '--', linewidth=linewidth)
-	plt.show()
-	# # plt.savefig(file_path+csv_list[-1].split('.')[0]+'.jpg')
+
 
 	for name in name_list:
 		csv_list = [file if name in file else '' for file in list_file(file_path,'.csv')]
@@ -354,3 +352,6 @@ def metrics_visual(name_list, file_path, fix={'Th':0.1,'Fa':0.2,'Order':2}):
 
 		print('Method:',name,'\tTarPrec.',TarPrec,'\tTarRec.',TarRec,'\tTarF1:',TarF1,'\tPxlPrec.',PxlPrec,'\tPxlRec.',PxlRec,'\tPxlF1:',PxlF1,'\tPd',Pd,'\tFa',fixedFa,'AUC:',AUC,'\n')
 		# print('Method:',name,'AUC:',AUC,'\n')
+
+	plt.show()
+	# # plt.savefig(file_path+csv_list[-1].split('.')[0]+'.jpg')
