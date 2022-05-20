@@ -3,7 +3,7 @@ Official PyTorch implementation of the paper entitled 'Local Patch Network with 
 
 ## Network Architecture
 
-![image-20220519222418801](C:\Users\CFun\AppData\Roaming\Typora\typora-user-images\image-20220519222418801.png)
+![](./figures/network_architecture.jpg)
 
 ## Dataset
 
