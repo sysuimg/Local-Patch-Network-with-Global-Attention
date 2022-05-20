@@ -7,7 +7,7 @@ Official PyTorch implementation of the paper entitled 'Local Patch Network with 
 
 ## Dataset
 
-We use two widely used public dataset that can be downloaded from following links:
+Two widely used public dataset can be downloaded from following links and we thank the authors for their nice works.
 
 SIRST dataset: https://github.com/YimianDai/sirst
 
@@ -53,6 +53,10 @@ Specifically, you need to organize the data folders & files as follows:
 |	|	|	|	|--Misc_2_gt.bmp
 |	|	|	|	|...
 ```
+
+Please convert each mask to a binary image with only value 0 and 255, and name it as '[image name]_gt.bmp' before moving it into the 'gt' folder.
+
+The division of training and testing set has been specified in the original dataset links and we just follow the authors' instruction.
 
 ## Requirements
 
