@@ -95,6 +95,7 @@ This work is supported by the National Natural Science Foundation  of China (No.
 If you have any technical questions, please contact:
 
 Fang Chen
+
 Email: [fchen905@usc.edu](mailto:fchen905@usc.edu) *or* [cfun.cqupt@outlook.com](mailto:cfun.cqupt@outlook.com)
 
 ## License
@@ -102,7 +103,9 @@ Email: [fchen905@usc.edu](mailto:fchen905@usc.edu) *or* [cfun.cqupt@outlook.com]
 This code is only freely available for non-commercial research use. If you have other purpose, please contact:
 
 Chenqiang Gao
+
 Email: [gaochenqiang@gmail.com](mailto:gaochenqiang@gmail.com) *or* [gaocq@cqupt.edu.cn](mailto:gaocq@cqupt.edu.cn)
+
 Copyright: Chongqing University of Posts and Telecommunications
 
 If you find some help for you, star is a good reward ^_^.
