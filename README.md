@@ -89,3 +89,20 @@ If you find this work useful for your research, please cite our [paper](https://
 ## Acknowledgements
 
 This work is supported by the National Natural Science Foundation  of China (No. 62176035, 61906025), the Natural Science Foundation of Chongqing, China (No. cstc2020jcyj-msxmX0835, cstc2021jcyj-bsh0155),  the Macao Science and Technology Development Fund under Grant (061/2020/A2), the Science and Technology Research Program of Chongqing Municipal Education Commission under Grant (No. KJZD-K202100606, KJQN201900607, KJQN202000647, KJQN202100646), the China Postdoctoral Science Foundation (No. 2021MD703940).
+
+## Contact
+
+If you have any technical questions, please contact:
+
+Fang Chen
+Email: [fchen905@usc.edu](mailto:fchen905@usc.edu) *or* [cfun.cqupt@outlook.com](mailto:cfun.cqupt@outlook.com)
+
+## License
+
+This code is only freely available for non-commercial research use. If you have other purpose, please contact:
+
+Chenqiang Gao
+Email: [gaochenqiang@gmail.com](mailto:gaochenqiang@gmail.com) *or* [gaocq@cqupt.edu.cn](mailto:gaocq@cqupt.edu.cn)
+Copyright: Chongqing University of Posts and Telecommunications
+
+If you find some help for you, star is a good reward ^_^.
