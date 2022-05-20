@@ -18,40 +18,40 @@ Specifically, you need to organize the data folders & files as follows:
 ``` shell
 |
 |--data/
-|	|--MFIRST/
-|	|	|--test/
-|	|	|	|--00000.bmp
-|	|	|	|--00001.bmp
-|	|	|	|...
-|	|	|	|--gt/
-|	|	|	|	|--00000_gt.bmp
-|	|	|	|	|--00001_gt.bmp
-|	|	|	|	|...
-|	|	|--train/
-|	|	|	|--000000.bmp
-|	|	|	|--000001.bmp
-|	|	|	|...
-|	|	|	|--gt/
-|	|	|	|	|--000000_gt.bmp
-|	|	|	|	|--000001_gt.bmp
-|	|	|	|	|...
-|	|--SIRST/
-|	|	|--test/
-|	|	|	|--Misc_6.bmp
-|	|	|	|--Misc_8.bmp
-|	|	|	|...
-|	|	|	|--gt/
-|	|	|	|	|--Misc_6_gt.bmp
-|	|	|	|	|--Misc_8_gt.bmp
-|	|	|	|	|...
-|	|	|--train/
-|	|	|	|--Misc_1.bmp
-|	|	|	|--Misc_2.bmp
-|	|	|	|...
-|	|	|	|--gt/
-|	|	|	|	|--Misc_1_gt.bmp
-|	|	|	|	|--Misc_2_gt.bmp
-|	|	|	|	|...
+|  |--MFIRST/
+|  |  |--test/
+|  |  |  |--00000.bmp
+|  |  |  |--00001.bmp
+|  |  |  |...
+|  |  |  |--gt/
+|  |  |  |  |--00000_gt.bmp
+|  |  |  |  |--00001_gt.bmp
+|  |  |  |  |...
+|  |  |--train/
+|  |  |  |--000000.bmp
+|  |  |  |--000001.bmp
+|  |  |  |...
+|  |  |  |--gt/
+|  |  |  |  |--000000_gt.bmp
+|  |  |  |  |--000001_gt.bmp
+|  |  |  |  |...
+|  |--SIRST/
+|  |  |--test/
+|  |  |  |--Misc_6.bmp
+|  |  |  |--Misc_8.bmp
+|  |  |  |...
+|  |  |  |--gt/
+|  |  |  |  |--Misc_6_gt.bmp
+|  |  |  |  |--Misc_8_gt.bmp
+|  |  |  |  |...
+|  |  |--train/
+|  |  |  |--Misc_1.bmp
+|  |  |  |--Misc_2.bmp
+|  |  |  |...
+|  |  |  |--gt/
+|  |  |  |  |--Misc_1_gt.bmp
+|  |  |  |  |--Misc_2_gt.bmp
+|  |  |  |  |...
 ```
 
 Please convert each mask to a binary image with only value 0 and 255, and name it as '[image name]_gt.bmp' before moving it into the 'gt' folder.
