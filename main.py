@@ -15,7 +15,7 @@ if __name__ == '__main__':
 
 
 	batch_size = 20
-	epoches = 20
+	epoches = 14
 
 
 	model = LPNetGA(im_size, patch_size, stride)
