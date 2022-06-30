@@ -174,7 +174,7 @@ class LPNetGA(nn.Module):
 		self.attn = Attn(self.feature_num, attn_chn)
 		self.lfe = LPNet(self.feature_num, lfe_chn)
 
-	def forward(self, x, mode='train'):
+	def forward(self, x, mode=None):
 		gfm = self.gfe(x)
 		attn = self.attn(gfm)
 
@@ -225,22 +225,19 @@ class LPNetGA(nn.Module):
 				fm_fuseState[:,:,i:i+self.ksize[0],j:j+self.ksize[1]] = fuse_state
 
 
+		# fused_fm /= torch.tensor(fm_fuseState).cuda().float()
+		# print(torch.max(fused_fm), torch.min(fused_fm))
+		
+		INF = 1e6
+		fused_fm = fused_fm[:,:,self.ksize[0]:h+self.ksize[0],self.ksize[1]:w+self.ksize[1]]
+		fused_fm = torch.clamp(fused_fm, 0.0, INF)
+
+		fusedFM = torch.reshape(fused_fm, (-1, 1, self.im_size[0]*self.im_size[1]))
 		attnFM = torch.reshape(attn, (-1, 1, self.im_size[0]*self.im_size[1]))
 
-
-		if mode=='train':
-			fusedFM = None
-		if mode=='test':
-			# fused_fm /= torch.tensor(fm_fuseState).cuda().float()
-			# print(torch.max(fused_fm), torch.min(fused_fm))
-			INF = 1e6
-			fused_fm = fused_fm[:,:,self.ksize[0]:h+self.ksize[0],self.ksize[1]:w+self.ksize[1]]
-			fused_fm = torch.clamp(fused_fm, 0.0, INF)
-			fusedFM = torch.reshape(fused_fm, (-1, 1, self.im_size[0]*self.im_size[1]))
-
-			for bi in range(b):
-				f = fusedFM[bi,:,:]
-				f = (f - torch.min(f)) / (torch.max(f) - torch.min(f)) ** self.fuse_coe
-				fusedFM[bi,:,:] = f
+		for bi in range(b):
+			f = fusedFM[bi,:,:]
+			f = ((f - torch.min(f)) / (torch.max(f) - torch.min(f))) ** self.fuse_coe
+			fusedFM[bi,:,:] = f
 
 		return (fusedFM, subimgs, attnFM)

@@ -7,7 +7,6 @@ from PIL import Image
 import torch
 from torch import nn
 from torch import optim
-from tqdm import tqdm
 import numpy as np
 from matplotlib import pyplot as plt
 from .utils import *
@@ -53,7 +52,7 @@ class Evaluator:
 		TP1 = 0
 		FP = 0
 		FN = 0
-		for i,img_name in enumerate(tqdm(selected_feature_lst)):
+		for i,img_name in enumerate(selected_feature_lst):
 			# im = cv2.imread(self.source_path)
 			feature = cv2.imread(self.feature_path+'/'+img_name,0)/255
 			pred = np.where(feature>=threshold, 1.0, 0.0)
@@ -110,7 +109,8 @@ class Evaluator:
 		FP = false_detection
 		TP = true_detection
 
-		print('TP:',TP,'\tTP1:',TP1,'\tFP:',FP,'\tFN:',FN,'\n')
+		if is_print:
+			print('TP:',TP,'\tTP1:',TP1,'\tFP:',FP,'\tFN:',FN,'\n')
 
 		# assert TP == TP1
 
@@ -158,7 +158,7 @@ class Evaluator:
 		fp = 0
 		tn = 0
 		pxls = 0
-		for i,img_name in enumerate(tqdm(selected_feature_lst)):
+		for i,img_name in enumerate(selected_feature_lst):
 			feature = cv2.imread(self.feature_path+'/'+img_name,0)/255
 			pred = np.where(feature>=threshold, 1.0, 0.0)
 			H,W = pred.shape

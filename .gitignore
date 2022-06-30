@@ -1,3 +1,4 @@
-/pretrained/
-/utils/pthfix.py
+.idea/
+__pycache__/
+pretrained/
 *.csv
