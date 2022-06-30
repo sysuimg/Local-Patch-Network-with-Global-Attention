@@ -27,14 +27,14 @@ if __name__ == '__main__':
 	gaussian_std = 20 # 5 std=1/σ
 	device_ids = [0,1]
 	
-	model = LPNetGA(im_size, patch_size, stride)
-	train('MFIRST', train_path, im_type, model, epoches, batch_size,
-		  attention_supervision=attention_supervision,
-		  gaussian_std=gaussian_std,
-		  data_aug=data_aug,
-		  eval_config=eval_config,
-		  load_path=load_path,
-		  device_ids=device_ids)
+	model = LPNetGA_v2(im_size, patch_size, stride)
+	# train('MFIRST', train_path, im_type, model, epoches, batch_size,
+	# 	  attention_supervision=attention_supervision,
+	# 	  gaussian_std=gaussian_std,
+	# 	  data_aug=data_aug,
+	# 	  eval_config=eval_config,
+	# 	  load_path=load_path,
+	# 	  device_ids=device_ids)
 	
 	
 	# # # testing
@@ -43,7 +43,7 @@ if __name__ == '__main__':
 	metrics_visual(['LPNetGA'], './')
 
 
-	# # ========================================== SIRST =============================================
+	# ========================================== SIRST =============================================
 	train_path = '../data/SIRST/train/'
 	test_path = '../data/SIRST/test/'
 	out_path = '../data/SIRST/test/LPNetGA/'
@@ -63,13 +63,13 @@ if __name__ == '__main__':
 	device_ids = [0,1]
 
 	model = LPNetGA_v2(im_size, patch_size, stride)
-	train('SIRST', train_path, im_type, model, epoches, batch_size,
-		  attention_supervision=attention_supervision,
-		  gaussian_std=gaussian_std,
-		  data_aug=data_aug,
-		  eval_config=eval_config,
-		  load_path=load_path,
-		  device_ids=device_ids)
+	# train('SIRST', train_path, im_type, model, epoches, batch_size,
+	# 	  attention_supervision=attention_supervision,
+	# 	  gaussian_std=gaussian_std,
+	# 	  data_aug=data_aug,
+	# 	  eval_config=eval_config,
+	# 	  load_path=load_path,
+	# 	  device_ids=device_ids)
 
 	# # # testing
 	test(test_path, out_path, im_type, model, load_path='./pretrained/LPNetGA-SIRST.pth')
