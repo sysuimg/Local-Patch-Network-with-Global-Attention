@@ -1,3 +1,16 @@
+'''
+Edited by Fang Chen [cfun.cqupt@outlook.com].
+Please cite our paper as follows if you use this code:
+@ARTICLE{9735292,
+  author={Chen, Fang and Gao, Chenqiang and Liu, Fangcen and Zhao, Yue and Zhou, Yuxi and Meng, Deyu and Zuo, Wangmeng},
+  journal={IEEE Transactions on Aerospace and Electronic Systems}, 
+  title={Local Patch Network with Global Attention for Infrared Small Target Detection}, 
+  year={2022},
+  volume={},
+  number={},
+  pages={1-1},
+  doi={10.1109/TAES.2022.3159308}}
+'''
 import os
 from models.LPNetGA import LPNetGA
 from models.LPNetGA_v2 import LPNetGA as LPNetGA_v2
