@@ -29,7 +29,7 @@ if __name__ == '__main__':
 	im_type = '.bmp'
 	
 	batch_size = 20
-	epoches = 40
+	epochs = 40
 	data_aug = False
 	load_path = None
 	eval_config = {'eval_path':test_path,
@@ -41,7 +41,7 @@ if __name__ == '__main__':
 	device_ids = [0,1]
 	
 	model = LPNetGA_v2(im_size, patch_size, stride)
-	# train('MFIRST', train_path, im_type, model, epoches, batch_size,
+	# train('MFIRST', train_path, im_type, model, epochs, batch_size,
 	# 	  attention_supervision=attention_supervision,
 	# 	  gaussian_std=gaussian_std,
 	# 	  data_aug=data_aug,
@@ -64,19 +64,19 @@ if __name__ == '__main__':
 	im_type = '.bmp'
 
 	batch_size = 8
-	epoches = 600
+	epochs = 600
 	data_aug = False
 	load_path = None
 	eval_config = {'eval_path':test_path,
 				   'tmp_path':tmp_path,
 				   'eval_start_epoch':300,
 				   'eval_per_epoch':10}
-	attention_supervision = False  # the attention layer can be self-attented in few-shot dataset
+	attention_supervision = False  # the attention layer can be self-supervised in few-shot dataset
 	gaussian_std = 5
 	device_ids = [0,1]
 
 	model = LPNetGA_v2(im_size, patch_size, stride)
-	# train('SIRST', train_path, im_type, model, epoches, batch_size,
+	# train('SIRST', train_path, im_type, model, epochs, batch_size,
 	# 	  attention_supervision=attention_supervision,
 	# 	  gaussian_std=gaussian_std,
 	# 	  data_aug=data_aug,

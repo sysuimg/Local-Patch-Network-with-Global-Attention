@@ -124,7 +124,7 @@ class MyParallel(nn.DataParallel):
 		self.stride = model.stride
 		self.fuse_coe = model.fuse_coe
 
-def train(key, data_path, im_type, model_input, epoches, batch_size, attention_supervision=False, gaussian_std=5, data_aug=True, eval_config=None, load_path=None, device_ids=[0]):
+def train(key, data_path, im_type, model_input, epochs, batch_size, attention_supervision=False, gaussian_std=5, data_aug=True, eval_config=None, load_path=None, device_ids=[0]):
 	model = MyParallel(copy.deepcopy(model_input).cuda(), device_ids=device_ids)
 	if load_path!=None:
 		print('load:', load_path)
@@ -145,7 +145,7 @@ def train(key, data_path, im_type, model_input, epoches, batch_size, attention_s
 	BCE = nn.BCELoss()
 
 	max_avg_f1 = 0
-	for epoch in range(epoches):
+	for epoch in range(epochs):
 
 		generator = data_generator(data_path, im_type, im_size=model.im_size, subim_ksize=model.ksize, subim_stride=model.stride, batch_size=batch_size, data_aug=data_aug, gaussian_std=gaussian_std)   
 		total = next(generator)
